@@ -13,6 +13,7 @@ import after from './after'
 import on from './on'
 import emit from './emit'
 import ajax from './ajax'
+import router from './router'
 
 export default {
   decoratorCompose,
@@ -30,4 +31,5 @@ export default {
   on,
   emit,
   ajax,
+  router,
 }

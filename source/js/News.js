@@ -2,8 +2,10 @@ import Coredna from './coredna/classes/Coredna'
 
 import click from './coredna/decorators/click'
 import emit from './coredna/decorators/emit'
+import ajax from './coredna/decorators/ajax'
 import eventEmmiter from './coredna/decorators/eventEmmiter'
 import methodEmmiter from './coredna/decorators/methodEmmiter'
+import { route } from './coredna/decorators/router'
 
 import log from './coredna/helpers/log'
 
@@ -21,7 +23,13 @@ class News extends Coredna {
 
   @emit('notifyLoad')
   load() {
-    log.green('News:load', this)
+    // log.green('News:load', this)
+  }
+  
+  @route('news/:int')
+  @ajax(id => ({ item: 'booyaka', id }))
+  showNews(id) {
+    log.purple('route: news', { id, "this": this })
   }
 
   @click('h2')

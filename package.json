@@ -22,6 +22,8 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
     "bacon": "0.0.1",
     "data.either": "^1.4.0",
     "data.maybe": "^1.2.2",

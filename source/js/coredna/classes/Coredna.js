@@ -2,6 +2,7 @@ import $ from 'jquery'
 import log from '../helpers/log'
 import * as pubsub from '../helpers/pubsub'
 import Symbols from '../helpers/symbols'
+import { initRoutes } from '../decorators/router'
 
 const uid = ((x) => () => (++x).toString(16))(100000)
 
@@ -27,7 +28,11 @@ export default class Coredna {
     emitters.forEach(({ type, callback }) => {
       pubsub.on(`${this.constructor.name}.${this.uid}.${type}`, callback.bind(this))
     })
+    
+    const routes = this[Symbols.routes] || []
 
+    initRoutes(routes, this)
+  
   }
 
 }
