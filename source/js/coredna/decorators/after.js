@@ -6,7 +6,7 @@ const after = type => (target, key, descriptor) => {
     ...descriptor,
     value: function(...args) {
       pubsub.emit(
-        `${this.constructor.name}.${type}`,
+        `${this.constructor.name}.${this.uid}.${type}`,
         this,
         [descriptor.value.apply(this, args)]
       )

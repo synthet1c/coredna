@@ -1,5 +1,5 @@
 let EVENTS = {}
-
+window.EVENTS = EVENTS
 export const on = (name, cb) => {
   if (!EVENTS[name]) {
     EVENTS[name] = {

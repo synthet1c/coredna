@@ -10,7 +10,7 @@ const emit = type => (target, key, descriptor) => {
         ? [ret].concat(args)
         : args
 
-      pubsub.emit(`${this.constructor.name}.${type}`, this, args)
+      pubsub.emit(`${this.constructor.name}.${this.uid}.${type}`, this, args)
     }
   }
 }

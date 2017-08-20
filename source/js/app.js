@@ -3,8 +3,18 @@ import news from './News'
 
 import log from './coredna/helpers/log'
 
-blog.on('handleClick', function(e, elem ) {
-  log.green('on Blog:handleClick', { e, elem })
+const test = function (x) {
+  return {
+    [x]: this[x]
+  }
+}
+
+blog.on('handleClick', function(html) {
+  log.green('on Blog:handleClick', html)
+})
+
+blog.on('handleClick', function(html) {
+  log.green('on Blog:handleClick(2)', html)
 })
 
 blog.getPost({ id: 4 })
@@ -14,6 +24,11 @@ news.on('notifyClick', function(e, elem) {
   log.green('on News:notifyClick', { e, elem })
 })
 
-console.log({ blog, news })
+console.log(
+  blog::test('thing')
+)
 
-// blog.handleClick('e', 'h1', 'data')
+console.log({
+  blog,
+  news
+})

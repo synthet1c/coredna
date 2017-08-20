@@ -14,8 +14,8 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         loader: 'babel',
         query: {
-          presets: ['es2015', 'stage-2', 'react'],
-          plugins: ['transform-decorators-legacy'],
+          presets: ['es2015', 'stage-2','react', 'env'],
+          plugins: ['transform-decorators-legacy', 'transform-function-bind'],
           cacheDirectory: '.webpackcache'
         }
       },

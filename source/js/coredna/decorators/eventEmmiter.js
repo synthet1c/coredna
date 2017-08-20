@@ -5,7 +5,7 @@ const events = function(target) {
     on: {
       value: function(event, fn) {
         const self = this
-        pubsub.on(`${this.constructor.name}.${event}`, function(...args) {
+        pubsub.on(`${this.constructor.name}.${this.uid}.${event}`, function(...args) {
           return fn.apply(self, args)
         })
       }
@@ -13,7 +13,7 @@ const events = function(target) {
     emit: {
       enumerable: false,
       value: function(event, ...args) {
-        pubsub.emit(`${this.constructor.name}.${event}`, this, ...args)
+        pubsub.emit(`${this.constructor.name}.${this.uid}.${event}`, this, ...args)
       }
     }
   })

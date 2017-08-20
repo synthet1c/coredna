@@ -8,10 +8,23 @@ export default el
 
 export const p = el('p')
 export const h3 = el('h3')
+export const ul = el('ul')
+export const li = el('li')
 export const div = el('div')
 export const pre = el('pre')
 export const span = el('span')
 export const section = el('section')
+
+export const subheading = (clazz, title) =>
+  h3(clazz,
+    span(`${clazz}__copy`, title)
+  )
+
+export const list = (name, list) =>
+  ul(`${name}__list`, ...list.map(
+      x => li(`${name}__item`, x)
+    )
+  )
 
 export const label = el('label')
 export const text = (selector, attrs) =>
@@ -28,7 +41,7 @@ export const text = (selector, attrs) =>
 */
 function createElement(type, selector, children) {
   const element = document.createElement(type)
-  applySelector(selector, element)
+  selector && applySelector(selector, element)
   if (children[0].constructor === Object) {
     applyAttributes(children.shift(), element)
   }

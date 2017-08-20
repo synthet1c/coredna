@@ -22,7 +22,11 @@ export const ajax = config => (target, key, descriptor) => ({
   value: function(params) {
     return new Promise((res,rej) => {
       setTimeout(() => {
-        const obj = Object.assign({}, config, params)
+
+        const obj = typeof config === 'function'
+          ? config(params)
+          : Object.assign({}, config, params)
+
         descriptor.value.call(this, obj)
         res(obj)
       }, 400)
