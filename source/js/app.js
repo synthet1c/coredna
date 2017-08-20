@@ -26,7 +26,7 @@ news.on('notifyClick', function(e, elem) {
   // log.green('on News:notifyClick', { e, elem })
 })
 
-news.showNews({ id: 666 })
+news.showNews(666)
 
 console.log(
   blog::test('thing')
