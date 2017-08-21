@@ -10,28 +10,14 @@ export default class Coredna {
 
   constructor () {
 
-    this.init && $(this.init.bind(this))
+    this.init && this.init()
+    this.ready && $(window).on('ready', this.ready.bind(this))
     this.load && $(window).on('load', this.load.bind(this))
 
     this.uid = uid()
-
-    const events = this[Symbols.events] || []
-
-    events.forEach(({ type, selector, callback }) => {
-      $(document).on(type, selector, (e, data) =>
-        callback.call(this, e, e.currentTarget, data)
-      )
-    })
-
-    const emitters = this[Symbols.emitters] || []
-
-    emitters.forEach(({ type, callback }) => {
-      pubsub.on(`${this.constructor.name}.${this.uid}.${type}`, callback.bind(this))
-    })
     
-    const routes = this[Symbols.routes] || []
-
-    initRoutes(routes, this)
+    this[Symbols.initEvents] && this[Symbols.initEvents]()
+    this[Symbols.initRoutes] && this[Symbols.initRoutes]()
   
   }
 

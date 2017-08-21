@@ -12,18 +12,18 @@ const test = function (x) {
 }
 
 blog.on('handleClick', function(html) {
-  // log.green('on Blog:handleClick', html)
+  log.green('on Blog:handleClick', html)
 })
 
 blog.on('handleClick', function(html) {
-  // log.green('on Blog:handleClick(2)', html)
+  log.green('on Blog:handleClick(2)', html)
 })
 
 blog.getPost({ id: 4 })
   .then(response => log.blue('post promise', response))
 
 news.on('notifyClick', function(e, elem) {
-  // log.green('on News:notifyClick', { e, elem })
+  log.green('on News:notifyClick', { e, elem })
 })
 
 news.showNews(666)

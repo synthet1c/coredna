@@ -80,12 +80,27 @@ export const initRoutes = function (_routes, context) {
 */
 export function route(uri) {
   return function(target, name, descriptor) {
+    
+    if (typeof target[Symbols.initRoutes] === 'undefined') {
+      Object.defineProperty(target, Symbols.initRoutes, {
+        value: function() {
+          (target[Symbols.routes] || []).forEach(route => {
+            routes.push({
+              ...route,
+              context: this
+            })
+          })
+        }
+      })
+    }
 
     const fn = descriptor.value
     const reg = new RegExp('^' + regexify(uri) + '$')
     const types = typeify(uri)
     
-    if (!target[Symbols.routes]) target[Symbols.routes] = [] 
+    if (!target[Symbols.routes]) {
+      Object.defineProperty(target, Symbols.routes, { value: [] })   
+    }
     
     target[Symbols.routes].push({
       fn, reg, types, uri

@@ -1,5 +1,4 @@
 import * as pubsub from '../helpers/pubsub'
-import Symbols from '../helpers/symbols'
 
 const emit = type => (target, key, descriptor) => {
   return {
