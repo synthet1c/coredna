@@ -9,16 +9,16 @@ const uid = ((x) => () => (++x).toString(16))(100000)
 export default class Coredna {
 
   constructor () {
-
-    this.init && this.init()
-    this.ready && $(window).on('ready', this.ready.bind(this))
-    this.load && $(window).on('load', this.load.bind(this))
-
-    this.uid = uid()
+      
+    if (typeof this.init === 'undefined') {
+      throw new Error('init method required on all children of Coredna class')
+    }
+      
+    Object.defineProperty(this, 'uid', { value: uid() })
     
-    this[Symbols.initEvents] && this[Symbols.initEvents]()
-    this[Symbols.initRoutes] && this[Symbols.initRoutes]()
-  
+    this.init()
+    
+    this.ready && $(window).on('ready', this.ready.bind(this))
+    this.load && $(window).on('load', this.load.bind(this)) 
   }
-
 }

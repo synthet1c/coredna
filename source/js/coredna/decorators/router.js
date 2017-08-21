@@ -8,7 +8,7 @@ const routes = []
  * convert a uri into a regular expression
  * @sig String -> RegExp
 */
-const regexify = uri => uri.replace(/(:\w+)/, (_, word) => {
+const replacify = uri => uri.replace(/(:\w+)/, (_, word) => {
   switch (word) {
     case ':int':
       return '([0-9]+)'
@@ -19,6 +19,12 @@ const regexify = uri => uri.replace(/(:\w+)/, (_, word) => {
   }
 })
 
+const regexify = 
+  uri => 
+    [uri]
+      .map(replacify)
+      .map(x => new RegExp('^' + x + '$'))
+      .pop()
  /*
  * typeify
  *
@@ -80,41 +86,30 @@ export const initRoutes = function (_routes, context) {
 */
 export function route(uri) {
   return function(target, name, descriptor) {
-    
-    if (typeof target[Symbols.initRoutes] === 'undefined') {
-      Object.defineProperty(target, Symbols.initRoutes, {
-        value: function() {
-          (target[Symbols.routes] || []).forEach(route => {
-            routes.push({
-              ...route,
-              context: this
-            })
-          })
-        }
-      })
-    }
-
-    const fn = descriptor.value
-    const reg = new RegExp('^' + regexify(uri) + '$')
-    const types = typeify(uri)
-    
-    if (!target[Symbols.routes]) {
-      Object.defineProperty(target, Symbols.routes, { value: [] })   
-    }
-    
-    target[Symbols.routes].push({
-      fn, reg, types, uri
+    const init = target.init
+    const callback = descriptor.value
+    Object.defineProperty(target, 'init', {
+      value: function() {
+        // call the original init function
+        const result = typeof init === 'function' && init.apply(this, arguments)
+      
+        // create the routes with the context set
+        routes.push({
+          fn: callback,
+          reg: regexify(uri),
+          types: typeify(uri),
+          uri,
+          context: this
+        })
+        
+        return result
+      }
     })
 
     return {
       ...descriptor,
-      value: function(...args) {
-        // ensure the calling functions args are the correct type
-        const argsSameType = args.every((arg, ii) => typeof(arg) === types[ii])
-
-        if (true || argsSameType) {
-          return fn.apply(this, args)
-        }
+      value: function() {
+        return callback.apply(this, arguments)
       }
     }
   }

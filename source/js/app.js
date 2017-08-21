@@ -26,6 +26,10 @@ news.on('notifyClick', function(e, elem) {
   log.green('on News:notifyClick', { e, elem })
 })
 
+news.on('notifyClick', function() {
+  log.red('on News:notifyLoad')
+})
+
 news.showNews(666)
 
 console.log(

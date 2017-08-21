@@ -2,25 +2,33 @@ import * as Symbols from '../helpers/symbols'
 import $ from 'jquery'
 
 const $on = (type, selector) => (target, key, descriptor) => {
-  if (!target[Symbols.events]) {
-    Object.defineProperty(target, Symbols.events, { value: [] }) 
-    Object.defineProperty(target, Symbols.initEvents, {
-      value: function() {
-        const events = this[Symbols.events] || []
-        events.forEach(({ type, selector, callback }) => {
-          $(document).on(type, selector, (e, data) =>
-            callback.call(this, e, e.currentTarget, data)
-          )
-        })
+  const init = target.init
+  const callback = descriptor.value
+  
+  // save events to the prototype
+  // decorate the init method or create it
+  Object.defineProperty(target, 'init', {
+    value: function() {
+      // run the original init function
+      const result = typeof init === 'function' && init.apply(this, arguments)
+      // int the events with the correct context set
+      $(document).on(type, selector, (e, data) =>
+        callback.call(this, e, e.currentTarget, data)
+      )
+      return {
+        ...descriptor,
+        value: function() {
+          return callback.apply(this, arguments)
+        }
       }
-    })
-  }
-  target[Symbols.events].push({
-    type,
-    selector,
-    callback: descriptor.value
+    }
   })
-  return descriptor
+  return {
+    ...descriptor,
+    value: function() {
+      return callback.apply(this, arguments)
+    }
+  }
 }
 
 export default $on

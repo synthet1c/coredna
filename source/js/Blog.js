@@ -12,7 +12,6 @@ import methodEmmiter from './coredna/decorators/methodEmmiter'
 
 import log from './coredna/helpers/log'
 
-
 const unary = fn => x => fn(x)
 const heading = title => h3('.heading', span('.heading__copy', title))
 
