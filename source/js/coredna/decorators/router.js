@@ -1,4 +1,5 @@
 import Symbols from '../helpers/symbols'
+import log from '../helpers/log'
 
 const routes = []
 
@@ -55,6 +56,7 @@ export function run(uri) {
     const args = [].concat(uri.match(route.reg))
       .slice(1)
       .map(x => !isNaN(Number(x)) ? Number(x) : String(x))
+    log.BLUE('router', { route, args })
     return route.fn.apply(route.context, args)
   }
 }

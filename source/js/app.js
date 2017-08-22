@@ -1,3 +1,5 @@
+window.ENV = 'development'
+
 import blog from './Blog'
 import news from './News'
 
