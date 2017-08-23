@@ -32,13 +32,21 @@ news.on('notifyClick', function() {
   log.red('on News:notifyLoad')
 })
 
+news.on('notifyAjax', function(...args) {
+  log('news ajax yo!', ...args)
+})
+
 news.showNews(666)
 
-console.log(
+log.set(log.DEBUG)
+
+log(
+  'Blog::test',
   blog::test('thing')
 )
 
-console.log({
+log('classes', {
   blog,
   news
 })
+log.remove(log.DEBUG)

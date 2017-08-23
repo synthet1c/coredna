@@ -23,11 +23,12 @@ class News extends Coredna {
 
   @emit('notifyLoad')
   load() {
-    log.green('News:load', this)
+    log.GREEN('News:load', this)
   }
-  
+
   @route('news/:int')
   @ajax(id => ({ item: 'booyaka', id }))
+  @emit('notifyNews')
   showNews(news) {
     log.purple('News:showNews', { news, "this": this })
   }

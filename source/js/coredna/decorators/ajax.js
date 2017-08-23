@@ -1,5 +1,6 @@
 import $ from 'jquery'
 import wrap from './wrap'
+import log from '../helpers/log'
 
 const $ajax = config => wrap(function(original, params) {
   $.ajax($.extend(config, params))
@@ -26,6 +27,8 @@ export const ajax = config => (target, key, descriptor) => ({
         const obj = typeof config === 'function'
           ? config(params)
           : Object.assign({}, config, params)
+
+        log.ajax('ajax', obj)
 
         descriptor.value.call(this, obj)
         res(obj)

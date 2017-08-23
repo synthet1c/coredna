@@ -20,8 +20,8 @@ const replacify = uri => uri.replace(/(:\w+)/, (_, word) => {
   }
 })
 
-const regexify = 
-  uri => 
+const regexify =
+  uri =>
     [uri]
       .map(replacify)
       .map(x => new RegExp('^' + x + '$'))
@@ -56,7 +56,7 @@ export function run(uri) {
     const args = [].concat(uri.match(route.reg))
       .slice(1)
       .map(x => !isNaN(Number(x)) ? Number(x) : String(x))
-    log.BLUE('router', { route, args })
+    log.route('router', { route, args })
     return route.fn.apply(route.context, args)
   }
 }
@@ -66,7 +66,7 @@ export function run(uri) {
  *
  * this function will initialize the routes when a Core dna object
  * is instantiated passing in the route context
- * 
+ *
  * _routes can be obtained with the Symbol('routes') on the instance
  * prototype
 */
@@ -94,7 +94,7 @@ export function route(uri) {
       value: function() {
         // call the original init function
         const result = typeof init === 'function' && init.apply(this, arguments)
-      
+
         // create the routes with the context set
         routes.push({
           fn: callback,
@@ -103,7 +103,7 @@ export function route(uri) {
           uri,
           context: this
         })
-        
+
         return result
       }
     })
