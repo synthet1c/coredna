@@ -38,7 +38,11 @@ news.on('notifyAjax', function(...args) {
 
 news.showNews(666)
 
-log.set(log.DEBUG)
+log.BLUE(
+  'tests',
+  news.propTest({ thing: 'alice in chains' })
+    .then(x => log.purple('then', x))
+)
 
 log(
   'Blog::test',
@@ -49,4 +53,3 @@ log('classes', {
   blog,
   news
 })
-log.remove(log.DEBUG)

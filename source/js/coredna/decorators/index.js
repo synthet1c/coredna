@@ -14,6 +14,7 @@ import on from './on'
 import emit from './emit'
 import ajax from './ajax'
 import router from './router'
+import pipe from './pipe'
 
 export default {
   decoratorCompose,
@@ -32,4 +33,5 @@ export default {
   emit,
   ajax,
   router,
+  pipe,
 }

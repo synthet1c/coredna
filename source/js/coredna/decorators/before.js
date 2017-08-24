@@ -1,6 +1,6 @@
 import wrap from './wrap'
 
-const = fn => wrap(function(original, ...args) {
+const before => wrap(function(original, ...args) {
   const ret = fn.apply(this, args)
   return original.call(this, ret, ...args)
 })
