@@ -30,8 +30,7 @@ export const ajax = config => (target, key, descriptor) => ({
 
         log.ajax('ajax', obj)
 
-        descriptor.value.call(this, obj)
-        res(obj)
+        res(descriptor.value.call(this, obj))
       }, 400)
     })
   }

@@ -7,6 +7,9 @@ import click from './coredna/decorators/click'
 import emit from './coredna/decorators/emit'
 import after from './coredna/decorators/after'
 import bind from './coredna/decorators/bind'
+import pipe from './coredna/decorators/pipe'
+import decorator from './coredna/decorators/decorator'
+import promisify from './coredna/decorators/promisify'
 import eventEmmiter from './coredna/decorators/eventEmmiter'
 import methodEmmiter from './coredna/decorators/methodEmmiter'
 
@@ -14,6 +17,11 @@ import log from './coredna/helpers/log'
 
 const unary = fn => x => fn(x)
 const heading = title => h3('.heading', span('.heading__copy', title))
+
+const add = x => y => x + y
+
+const addN = x => decorator(add(x))
+const numberOfTheBeast = pipe(add(666))
 
 @eventEmmiter
 class Blog extends Coredna {
@@ -57,6 +65,18 @@ class Blog extends Coredna {
     log.purple(e.target.value)
   }
 
+  @promisify
+  @pipe(x => x + 666)
+  promisified(x) {
+    log.PURPLE('promisify', x)
+    return x + 111
+  }
+
+  @numberOfTheBeast
+  thingy(x) {
+    return log.blue('thingy', x)
+  }
+
   renderPost({ id, action, name, value, posts }) {
     return log.purple('html',
       this.root.appendChild(
@@ -84,7 +104,6 @@ class Blog extends Coredna {
   @click('h1')
   @after('handleClick')
   handleClick(e, elem) {
-    log.blue('Blog:handleClick', { e, elem })
     return (
       section('.click',
         div('.click__content', e.target.innerText)

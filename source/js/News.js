@@ -35,35 +35,25 @@ class News extends Coredna {
     return num + 1
   }
 
+  @pipe(prop('thing'), upperCase)
   @ajax(id => ({ thing: 'booyaka', id }))
-  @pipe(
-    prop('thing'),
-    upperCase
-  )
   propTest(x) {
-    return log.BLUE('propTest', x)
-  }
-
-  @emit('notifyLoad')
-  load() {
-    log.GREEN('News:load', this)
+    return log.BLUE('propTest beech', x)
   }
 
    /*
    * showNews : Int -> Promise(news)
   */
   @route('news/:int')
-  @pipe(add(666), multiply(3))
   @ajax(id => ({ item: 'booyaka', id }))
   @emit('notifyNews')
   showNews(news) {
-    return log.purple('News:showNews', { news, "this": this })
+    return log.purple('News:showNews:net', { news, "this": this })
   }
 
   @click('h2')
   @emit('notifyClick')
   handleClick(e, elem, data) {
-    log.red('News:handleClick', { e, elem, data, self: this })
     return 'handled'
   }
 

@@ -17,7 +17,7 @@ const INFO = new Level(1, 'info')
 const ERROR = new Level(0, 'error')
 const ALL = new Level(Infinity, 'all')
 
-let LEVELS = new Set([AJAX, ROUTE, DEBUG, INFO, ERROR])
+let LEVELS = new Set([DEBUG, INFO, ERROR])
 
 const border = color => [
   `border-left:3px solid ${color}`,
@@ -112,96 +112,96 @@ log.none = () => log.remove(ALL)
 log.all = () => log.set(ALL)
 
 
-const b = color => [
-  `border: 1px solid ${color}`,
-  `color:${color}`,
-  `padding:.5em`,
-  `font-size:1.5em`,
-  `line-height:2`,
-].join(';')
-
-const B = color => [
-  `border: 1px solid ${color}`,
-  `background:${color}`,
-  `color:white`,
-  `padding:.5em`,
-  `font-size:1.5em`,
-  `line-height:2`,
-].join(';')
-
-
-let count = 0
-const colors = [
-  [B(blue), b(purple), b(green)],
-  [b(blue), B(purple), b(green)],
-  [b(blue), b(purple), B(green)]
-]
-
-const H = [
-  `color:${blue}`,
-  `font-size:2em`,
-  `line-height:2em`,
-  `text-shadow:0 0 10px 10px ${blue}`,
-  `font-weight:700`
-].join(';')
-
-let dots = 0
-let timer = null
-function render() {
-  console.clear
-  dots = (dots + 1) % 4
-  console.clear()
-  console.log('%c hi, want to know more about this website?' + Array(dots).fill('.').join(''), H)
-  timer = setTimeout(render, 400)
-}
-// render()
-
-
-console.log('%c home %c contact %c about ', ...colors[count])
-
-Object.defineProperties(window, {
-  next: {
-    get: function() {
-      console.clear()
-      count = (count + 1) % 3
-      console.log('%c home %c contact %c about ', ...colors[count])
-    }
-  },
-  prev: {
-    get: function() {
-      console.clear()
-      count = (count - 1)
-      if (count < 0) count = 2
-      console.log('%c home %c contact %c about ', ...colors[count])
-    }
-  },
-  activate: {
-    value() {
-      window.addEventListener('keydown', function(e) {
-        if (e.which === 37 || e.which === 39 || e.which === 9) {
-          e.preventDefault()
-          e.stopPropagation()
-          switch (e.which) {
-            case 37:
-              if (e.shiftKey) {
-                window.next
-              } else {
-                window.prev
-              }
-              break
-            case 9:
-            case 39:
-              if (e.shiftKey) {
-                window.prev
-              } else {
-                window.next
-              }
-              break
-          }
-        }
-      }, false)
-    }
-  }
-})
+//const b = color => [
+//  `border: 1px solid ${color}`,
+//  `color:${color}`,
+//  `padding:.5em`,
+//  `font-size:1.5em`,
+//  `line-height:2`,
+//].join(';')
+//
+//const B = color => [
+//  `border: 1px solid ${color}`,
+//  `background:${color}`,
+//  `color:white`,
+//  `padding:.5em`,
+//  `font-size:1.5em`,
+//  `line-height:2`,
+//].join(';')
+//
+//
+//let count = 0
+//const colors = [
+//  [B(blue), b(purple), b(green)],
+//  [b(blue), B(purple), b(green)],
+//  [b(blue), b(purple), B(green)]
+//]
+//
+//const H = [
+//  `color:${blue}`,
+//  `font-size:2em`,
+//  `line-height:2em`,
+//  `text-shadow:0 0 10px 10px ${blue}`,
+//  `font-weight:700`
+//].join(';')
+//
+//let dots = 0
+//let timer = null
+//function render() {
+//  console.clear
+//  dots = (dots + 1) % 4
+//  console.clear()
+//  console.log('%c hi, want to know more about this website?' + Array(dots).fill('.').join(''), H)
+//  timer = setTimeout(render, 400)
+//}
+//// render()
+//
+//
+//console.log('%c home %c contact %c about ', ...colors[count])
+//
+//Object.defineProperties(window, {
+//  next: {
+//    get: function() {
+//      console.clear()
+//      count = (count + 1) % 3
+//      console.log('%c home %c contact %c about ', ...colors[count])
+//    }
+//  },
+//  prev: {
+//    get: function() {
+//      console.clear()
+//      count = (count - 1)
+//      if (count < 0) count = 2
+//      console.log('%c home %c contact %c about ', ...colors[count])
+//    }
+//  },
+//  activate: {
+//    value() {
+//      window.addEventListener('keydown', function(e) {
+//        if (e.which === 37 || e.which === 39 || e.which === 9) {
+//          e.preventDefault()
+//          e.stopPropagation()
+//          switch (e.which) {
+//            case 37:
+//              if (e.shiftKey) {
+//                window.next
+//              } else {
+//                window.prev
+//              }
+//              break
+//            case 9:
+//            case 39:
+//              if (e.shiftKey) {
+//                window.prev
+//              } else {
+//                window.next
+//              }
+//              break
+//          }
+//        }
+//      }, false)
+//    }
+//  }
+//})
 
 export default log
