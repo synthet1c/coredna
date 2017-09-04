@@ -1,5 +1,5 @@
 window.ENV = 'development'
-
+// import './validation'
 import blog from './Blog'
 import news from './News'
 
@@ -33,6 +33,10 @@ news.on('notifyAjax', function(...args) {
 })
 
 news.showNews(666)
+
+news.on('notifyNews', function(args) {
+  return log.PURPLE('notified yo', args);
+})
 
 blog.promisified(777)
   .then(x => log.PURPLE('promisified', x))

@@ -8,6 +8,8 @@ import eventEmmiter from './coredna/decorators/eventEmmiter'
 import methodEmmiter from './coredna/decorators/methodEmmiter'
 import { route } from './coredna/decorators/router'
 
+import $ from 'jquery'
+
 import log from './coredna/helpers/log'
 
 const add = a => b => a + b
@@ -29,6 +31,21 @@ class News extends Coredna {
     log.blue('News:init', this)
   }
 
+  load() {
+    this.initImages('li')
+  }
+
+  initImages(selector) {
+    $(selector).each(function(css) {
+      const $this = $(this)
+      $this.css({
+        background: 'red',
+        color: 'white'
+      })
+      .addClass('loaded')
+    })
+  }
+
   @pipe(add(3), multiply(2))
   test(num) {
     log.GREEN('test', num)
@@ -46,7 +63,7 @@ class News extends Coredna {
   */
   @route('news/:int')
   @ajax(id => ({ item: 'booyaka', id }))
-  @emit('notifyNews')
+  @emit('notifyNews') // emit is causing shawNews to be called twice
   showNews(news) {
     return log.purple('News:showNews:net', { news, "this": this })
   }

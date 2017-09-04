@@ -72,6 +72,10 @@ class Blog extends Coredna {
     return x + 111
   }
 
+  comments() {
+
+  }
+
   @numberOfTheBeast
   thingy(x) {
     return log.blue('thingy', x)
