@@ -1,8 +1,9 @@
 window.ENV = 'development'
-
+import './coredna/validate'
 import blog from './Blog'
 import news from './News'
-
+import './editor/mentions'
+import './editor/editor'
 import { run } from './coredna/decorators/router'
 
 import log from './coredna/helpers/log'
