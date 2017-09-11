@@ -1,6 +1,6 @@
 const posts = [
-  { id: 111, user: 'andrew', status: 'done' },
-  { id: 112, user: 'sharjeel', status: 'done' },
+  { id: 111, user: 'andrew', status: 'done', comment: 'sup' },
+  { id: 112, user: 'sharjeel', status: 'done', comment: 'yea boi' },
   { id: 113, user: 'john', status: 'pending' },
   { id: 114, user: 'sharjeel', status: 'done' },
   { id: 115, user: 'andrew', status: 'done' },
@@ -45,11 +45,68 @@ const lastChar = str => str[str.length - 1]
 
 console.log({ lookup })
 
+const TAB = 9;
+
+
+function placeCaretAtEnd(el) {
+  el.focus();
+  if (typeof window.getSelection != "undefined"
+    && typeof document.createRange != "undefined") {
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } else if (typeof document.body.createTextRange != "undefined") {
+    var textRange = document.body.createTextRange();
+    textRange.moveToElementText(el);
+    textRange.collapse(false);
+    textRange.select();
+  }
+}
+
+
+const omniboxTab = e => {
+
+  if (e.keyCode !== TAB) return true
+  e.preventDefault();
+
+  const text = e.target.innerText;
+  const last = text.split(/\s/).pop();
+  const [ key, value ] = last.split(':');
+  const regKey = new RegExp(`^${key}.*`);
+  const regValue = new RegExp(`^${value}.*`);
+  const [ match ] = keys.filter(x => regKey.test(x));
+
+  if (key && match) {
+    if (text === match) {
+      underlay.innerText = text
+      input.innerText = text
+    }
+    else {
+      let suggestion = lookup[match].find(o => regValue.test(o));
+      if (match && value && suggestion) {
+        underlay.innerText = text.slice(0, text.lastIndexOf(':')) + ':' + suggestion
+        input.innerText = text.slice(0, text.lastIndexOf(':')) + ':' + suggestion
+      }
+      else {
+        underlay.innerText = text
+        input.innerText = text
+      }
+    }
+  }
+  else {
+    underlay.innerText = text
+    input.innerText = text
+  }
+  placeCaretAtEnd(input)
+};
 
 const omniboxKeyup = e => {
 
   const text = e.target.innerText;
-  const last = text.split(/\s*,*\s+/).pop();
+  const last = text.split(/\s/).pop();
   const [ key, value ] = last.split(':');
   const regKey = new RegExp(`^${key}.*`);
   const regValue = new RegExp(`^${value}.*`);
@@ -67,8 +124,12 @@ const omniboxKeyup = e => {
       else {
         if (lastChar(text) === ':') {
           underlay.innerText = text.slice(0, text.length - key.length - 1) + match + ':'
-        } else {
+        } else if (match && value && !suggestion) {
+          underlay.innerText = text
+        } else if (match && !suggestion) {
           underlay.innerText = text.slice(0, text.length - key.length) + match
+        } else {
+          underlay.innerText = text
         }
       }
     }
@@ -79,3 +140,4 @@ const omniboxKeyup = e => {
 };
 
 input.addEventListener('keyup', omniboxKeyup, false);
+input.addEventListener('keydown', omniboxTab, false);
