@@ -3,13 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <title>functional starter kit</title>
+  <link rel="stylesheet" href="source/css/app.css">
 </head>
 <body>
   <h1 data-test="test">
     <span>functional starter kit</span>
     <input id="one" name="one" value="one" />
     <input id="two" name="two" value="two" />
+    <input id="filter" name="filter" />
   </h1>
+  <div class="omnibox">
+    <div class="omnibox__underlay" id="underlay"></div>
+    <div class="omnibox__input" id="input" contenteditable spellcheck="false"></div>
+  </div>
+
   <h2>News heading</h2>
   <textarea id="editor"></textarea>
   <script src="/node_modules/ckeditor/ckeditor.js" charset="utf-8"></script>

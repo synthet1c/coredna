@@ -1,3 +1,4 @@
 .webpackcache/
 dist/
 node_modules/
+.idea/*

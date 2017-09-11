@@ -5,12 +5,13 @@ import news from './News'
 import './editor/mentions'
 import './editor/editor'
 import { run } from './coredna/decorators/router'
+import './filter'
 
 import log from './coredna/helpers/log'
 
 const test = function (x) {
   return {
-    [x]: this[x]
+    [x]: this[x],
   }
 }
 
@@ -18,12 +19,25 @@ blog.on('handleClick', function(html) {
   log.green('on Blog:handleClick', html)
 })
 
-blog.on('handleClick', function(html) {
+blog.on('bitchAssNigga', function(bitch) {
+  return bitch
+})
+
+blog.on('handleClick', function (html) {
+  log.green('on Blog:handleClick(2)', html)
+})
+
+
+blog.on('handleClick', function (html) {
   log.green('on Blog:handleClick(2)', html)
 })
 
 blog.getPost({ id: 4 })
   .then(response => log.blue('post promise', response))
+
+news.on('notifyClick', function(e, elem) {
+  log.green('on News:notifyClick', { e, elem })
+})
 
 news.on('notifyClick', function(e, elem) {
   log.green('on News:notifyClick', { e, elem })
@@ -54,5 +68,5 @@ log(
 
 log('classes', {
   blog,
-  news
+  news,
 })

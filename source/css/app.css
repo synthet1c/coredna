@@ -1,3 +1,28 @@
-body {
-  background: red;
+.omnibox {
+  position: relative;
+  border: 1px solid #ccc;
+}
+
+.omnibox__underlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.omnibox__underlay {
+  z-index: -1;
+  color: #aaa;
+}
+
+.omnibox__input {
+  outline: none;
+}
+
+.omnibox__input,
+.omnibox__underlay {
+  font-family: sans-serif;
+  font-size: 1.5em;
+  padding: .5em;
 }
