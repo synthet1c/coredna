@@ -12,6 +12,7 @@ const filter = document.querySelector('#filter')
 const regexify = x =>
   new RegExp('.*' + x.split('').join('.*') + '.*', 'i')
 
+/*
 const filterItems = items => e => {
   const { value } = e.target
   const reg = regexify(value)
@@ -19,13 +20,15 @@ const filterItems = items => e => {
     items.filter(o => reg.test(o.user))
   )
 }
+*/
+const last = x => x[x.length - 1]
 
 const onKey = keyCode => cb => e =>
   (e.keyCode === keyCode)
     ? cb(e)
     : true
 
-filter.addEventListener('keydown', onKey(13)(filterItems(posts)), false)
+// filter.addEventListener('keydown', onKey(13)(filterItems(posts)), false)
 
 const underlay = document.querySelector('#underlay')
 const input = document.querySelector('#input')
@@ -103,6 +106,36 @@ const omniboxTab = e => {
   placeCaretAtEnd(input)
 };
 
+const pairsToObject = pairs => pairs.reduce((acc, [key, value]) => {
+  if (acc[key] == null) {
+    acc[key] = []
+  }
+  acc[key].push(value)
+  return acc
+} ,{})
+
+
+
+const filterOmnibox = fn => e => {
+  const text = e.target.innerText;
+  const pairs = text.split(/,*\s/).map(x => x.split(':'));
+  const params = pairsToObject(pairs)
+  return fn({ text, pairs, params })
+}
+
+const reg = x => new RegExp(`^${x}`)
+
+const filterItems = items => ({ text, pairs, params }) => {
+
+  const ret = pairs.reduce((acc, [key, value]) => {
+    return  acc.filter(obj => (obj[key] != null && reg(value).test(obj[key])))
+  }, items)
+
+  
+
+  console.log({ items, text, pairs, params, ret })
+}
+
 const omniboxKeyup = e => {
 
   const text = e.target.innerText;
@@ -139,5 +172,5 @@ const omniboxKeyup = e => {
   }
 };
 
-input.addEventListener('keyup', omniboxKeyup, false);
-input.addEventListener('keydown', omniboxTab, false);
+input.addEventListener('keyup', filterOmnibox(filterItems(posts)), false);
+// input.addEventListener('keydown', omniboxTab, false);
