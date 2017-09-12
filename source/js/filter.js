@@ -1,9 +1,11 @@
+import { section, div, h3, p } from './coredna/helpers/html'
+
 const posts = [
   { id: 111, user: 'andrew', status: 'done', comment: 'sup' },
   { id: 112, user: 'sharjeel', status: 'done', comment: 'yea boi' },
   { id: 113, user: 'john', status: 'pending' },
   { id: 114, user: 'sharjeel', status: 'done' },
-  { id: 115, user: 'andrew', status: 'done' },
+  { id: 115, user: 'andrew', status: 'pending' },
 ]
 
 
@@ -32,6 +34,7 @@ const onKey = keyCode => cb => e =>
 
 const underlay = document.querySelector('#underlay')
 const input = document.querySelector('#input')
+const output = document.querySelector('#output')
 
 const keys = Object.keys(posts[0])
 
@@ -123,18 +126,52 @@ const filterOmnibox = fn => e => {
   return fn({ text, pairs, params })
 }
 
+const unary = fn => x => fn(x)
 const reg = x => new RegExp(`^${x}`)
+
+const autocomplete = (suggestion = '') => {
+  const value = input.innerText
+  underlay.innerText = value.slice(0, value.lastIndexOf(':') + 1) + suggestion
+}
 
 const filterItems = items => ({ text, pairs, params }) => {
 
-  const ret = pairs.reduce((acc, [key, value]) => {
+  // filter the items by the search pairs
+  const results = pairs.reduce((acc, [key, value]) => {
     return  acc.filter(obj => (obj[key] != null && reg(value).test(obj[key])))
   }, items)
 
-  
+  // get the latest search params
+  const [ key, value ] = last(pairs)
 
-  console.log({ items, text, pairs, params, ret })
+  // find the first matching value iin the results
+  const suggestion = value && results.find(obj => reg(value).test(obj[key]))
+
+  autocomplete(lookup[key] && lookup[key].find(x => reg(value).test(x)))
+
+  // check if we have an exact match
+  if (value && value === suggestion) {
+    console.log('exact match', key, value)
+  }
+
+  // if there is new results remake the html
+  if (results.length)
+    output.innerHTML = ''
+
+  results.map(obj =>
+    section('.post',
+      div('.post__inner',
+        div('.post__content',
+          h3('.post__heading', obj.user),
+          p('.post__copy', obj.status)
+        )
+      )
+    )
+  ).forEach(::output.appendChild)
+
+  console.log({ items, text, pairs, params, results, suggestion })
 }
+
 
 const omniboxKeyup = e => {
 
