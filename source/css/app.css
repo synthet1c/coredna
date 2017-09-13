@@ -26,3 +26,26 @@
   font-size: 1.5em;
   padding: .5em;
 }
+
+.post {
+  /*border: 1px solid #aaa;*/
+  font-family: sans-serif;
+  padding: .5em;
+}
+
+.post.pending {
+  background: #efd396;
+}
+
+.post.done {
+  /*background: green;*/
+}
+
+.post__heading {
+  margin: 0;
+  padding: 0;
+}
+.post__copy {
+  margin: 0;
+  padding: 0;
+}
