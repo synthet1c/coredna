@@ -1,6 +1,7 @@
 import { section, div, h3, p } from './coredna/helpers/html'
 
 const posts = [
+  { id: 66, shit: 'cunt', user: 'john', status: 'shit' },
   { id: 111, user: 'andrew', status: 'done', comment: 'sup' },
   { id: 112, user: 'sharjeel', status: 'done', comment: 'yea boi' },
   { id: 113, user: 'john', status: 'pending' },
@@ -129,25 +130,38 @@ const filterOmnibox = fn => e => {
 const unary = fn => x => fn(x)
 const reg = x => new RegExp(`^${x}`)
 
-const autocomplete = (suggestion = '') => {
+const autocompleteKey = (suggestion = '') => {
+  const value = input.innerText
+  underlay.innerText = value.slice(0, value.lastIndexOf(' ') + 1) + suggestion
+}
+
+const autocompleteValue = (suggestion = '') => {
   const value = input.innerText
   underlay.innerText = value.slice(0, value.lastIndexOf(':') + 1) + suggestion
 }
 
 const filterItems = items => ({ text, pairs, params }) => {
+  
+  // get the search params in order of importance
+  const search = Object.keys(params).map(k => [k, params[k]]).sort((a, b) => a[1].length - b[1].length)
 
   // filter the items by the search pairs
-  const results = pairs.reduce((acc, [key, value]) => {
-    return  acc.filter(obj => (obj[key] != null && reg(value).test(obj[key])))
+  const results = search.reduce((acc, [k, values]) => {
+    return acc.filter(obj => obj[k] != null && values.find(x => reg(x).test(obj[k]))) 
   }, items)
 
   // get the latest search params
   const [ key, value ] = last(pairs)
 
-  // find the first matching value iin the results
+  if (key && value == null) {
+    autocompleteKey(Object.keys(lookup).find(x => reg(key).test(x)))
+  }
+  
   const suggestion = value && results.find(obj => reg(value).test(obj[key]))
-
-  autocomplete(lookup[key] && lookup[key].find(x => reg(value).test(x)))
+  if (key && value != null) {
+    // find the first matching value iin the results
+    autocompleteValue(lookup[key] && lookup[key].find(x => reg(value).test(x)))
+  }
 
   // check if we have an exact match
   if (value && value === suggestion) {
@@ -163,15 +177,21 @@ const filterItems = items => ({ text, pairs, params }) => {
       div('.post__inner',
         div('.post__content',
           h3('.post__heading', obj.user),
-          p('.post__copy', obj.status)
+          p('.post__copy' + '.' + obj.status, obj.comment || 'no comment')
         )
       )
     )
   ).forEach(::output.appendChild)
 
-  console.log({ items, text, pairs, params, results, suggestion })
+  console.log({ items, text, pairs, params, results, suggestion, search })
 }
 
+const onTab = e => {
+  if (e.keyCode !== TAB) return true
+  e.preventDefault();
+  input.innerText = underlay.innerText
+  placeCaretAtEnd(input)
+}
 
 const omniboxKeyup = e => {
 
@@ -210,4 +230,4 @@ const omniboxKeyup = e => {
 };
 
 input.addEventListener('keyup', filterOmnibox(filterItems(posts)), false);
-// input.addEventListener('keydown', omniboxTab, false);
+input.addEventListener('keydown', onTab, false);
