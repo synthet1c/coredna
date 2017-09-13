@@ -1,14 +1,14 @@
 import { section, div, h3, p } from './coredna/helpers/html'
 
 const posts = [
-  { id: 66, shit: 'cunt', user: 'john', status: 'shit' },
   { id: 111, user: 'andrew', status: 'done', comment: 'sup' },
   { id: 112, user: 'sharjeel', status: 'done', comment: 'yea boi' },
   { id: 113, user: 'john', status: 'pending' },
   { id: 114, user: 'sharjeel', status: 'done' },
   { id: 115, user: 'andrew', status: 'pending' },
+  { id: 115, user: 'alec', status: 'onhold' },
+  { id: 66, shit: 'cunt', user: 'john', status: 'shit' },
 ]
-
 
 const filter = document.querySelector('#filter')
 
@@ -40,6 +40,7 @@ const output = document.querySelector('#output')
 const keys = Object.keys(posts[0])
 
 const lookup = posts.reduce((acc, obj) => {
+  const keys = Object.keys(obj)
   keys.forEach(key => {
     if (!acc[key]) acc[key] = [];
     if (!acc[key].includes(obj[key])) acc[key].push(obj[key])
@@ -141,22 +142,43 @@ const autocompleteValue = (suggestion = '') => {
 }
 
 const filterItems = items => ({ text, pairs, params }) => {
-  
+
   // get the search params in order of importance
   const search = Object.keys(params).map(k => [k, params[k]]).sort((a, b) => a[1].length - b[1].length)
 
   // filter the items by the search pairs
   const results = search.reduce((acc, [k, values]) => {
-    return acc.filter(obj => obj[k] != null && values.find(x => reg(x).test(obj[k]))) 
+    return acc.filter(
+      obj => {
+        let value = obj[k]
+        if (value == null) return false
+        if (typeof value === 'number') {
+          return values.find(x => {
+            if (!x) return false
+            if (x[0] === '>') {
+              const comparitor = x[0]
+              const v = Number(x.slice(1))
+              return value > v
+            }
+            else {
+              return values.find(x => x == value)
+            }
+          })
+        }
+        return values.find(x => reg(x).test(value))
+      })
   }, items)
 
   // get the latest search params
   const [ key, value ] = last(pairs)
 
+  if (!key && !value)
+    underlay.innerText = ''
+
   if (key && value == null) {
     autocompleteKey(Object.keys(lookup).find(x => reg(key).test(x)))
   }
-  
+
   const suggestion = value && results.find(obj => reg(value).test(obj[key]))
   if (key && value != null) {
     // find the first matching value iin the results
@@ -170,7 +192,7 @@ const filterItems = items => ({ text, pairs, params }) => {
 
   // if there is new results remake the html
   if (results.length)
-    output.innerHTML = ''
+  output.innerHTML = ''
 
   results.map(obj =>
     section('.post',
